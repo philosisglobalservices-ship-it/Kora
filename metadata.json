@@ -1,0 +1,6 @@
+{
+  "name": "KoraOps AI CEO",
+  "description": "Autonomous multi-agent enterprise orchestrator and executive operational intelligence platform for commercial traders.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

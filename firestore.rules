@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // KoraOps operational collections
+    match /approvals/{docId} {
+      allow read, write: if true;
+    }
+    match /inventory/{docId} {
+      allow read, write: if true;
+    }
+    match /transactions/{docId} {
+      allow read, write: if true;
+    }
+    match /agents/{docId} {
+      allow read, write: if true;
+    }
+    match /messages/{docId} {
+      allow read, write: if true;
+    }
+    match /sqlQueries/{docId} {
+      allow read, write: if true;
+    }
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

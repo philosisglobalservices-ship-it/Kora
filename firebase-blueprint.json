@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KoraOps Database Schema",
+  "description": "Enterprise autonomous orchestrator schema for approvals, inventory, transactions, workforce telemetry, chat messages, and audit queries.",
+  "entities": {
+    "approvals": {
+      "title": "ApprovalItem",
+      "description": "High-integrity human-in-the-loop purchase orders and disbursement authorizations.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "refCode": { "type": "string" },
+        "title": { "type": "string" },
+        "supplierOrClient": { "type": "string" },
+        "amount": { "type": "number" },
+        "risk": { "type": "string", "enum": ["Low", "Medium", "High"] },
+        "category": { "type": "string", "enum": ["Purchase Order", "Credit Limit", "Disbursement", "Price Discount"] },
+        "agentSource": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "modified", "rejected"] },
+        "date": { "type": "string" },
+        "details": { "type": "object" }
+      },
+      "required": ["id", "refCode", "title", "supplierOrClient", "amount", "status"]
+    },
+    "inventory": {
+      "title": "InventoryProduct",
+      "description": "Stock levels, replenishment thresholds, and multi-depot inventory states.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sku": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "stockLevel": { "type": "number" },
+        "unit": { "type": "string" },
+        "reorderPoint": { "type": "number" },
+        "leadTimeDays": { "type": "number" },
+        "burnRateHours": { "type": "number" },
+        "status": { "type": "string", "enum": ["healthy", "warning", "critical"] },
+        "branch": { "type": "string" },
+        "supplier": { "type": "string" }
+      },
+      "required": ["id", "sku", "name", "stockLevel", "status", "branch"]
+    },
+    "transactions": {
+      "title": "Transaction",
+      "description": "POS, NIBSS, and cash settlements reconciled across branches.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "time": { "type": "string" },
+        "customer": { "type": "string" },
+        "method": { "type": "string" },
+        "branch": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Settled", "Processing"] },
+        "reference": { "type": "string" }
+      },
+      "required": ["id", "customer", "amount", "status", "reference"]
+    },
+    "agents": {
+      "title": "SubAgentTelemetry",
+      "description": "Autonomous agents performance metrics, autonomy level, and health states.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "syncing", "idle", "warning"] },
+        "autonomy": { "type": "string", "enum": ["Autonomous", "Semi-Autonomous", "Supervised"] },
+        "accuracy": { "type": "number" },
+        "actionsToday": { "type": "number" },
+        "tools": { "type": "array", "items": { "type": "string" } },
+        "lastAction": { "type": "string" },
+        "avatarIcon": { "type": "string" }
+      },
+      "required": ["id", "name", "role", "status", "autonomy"]
+    },
+    "messages": {
+      "title": "ChatMessage",
+      "description": "AI CEO dialogue stream, executive summaries, and telemetry cards.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sender": { "type": "string", "enum": ["user", "agent"] },
+        "senderName": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "content": { "type": "string" },
+        "operationalVitality": { "type": "object" },
+        "velocityMetric": { "type": "object" },
+        "telemetryReports": { "type": "array" },
+        "pendingAuthorization": { "type": "object" },
+        "sqlCount": { "type": "number" }
+      },
+      "required": ["id", "sender", "senderName", "timestamp"]
+    },
+    "sqlQueries": {
+      "title": "SqlQueryItem",
+      "description": "Audit log of SQL queries executed against Postgres operational tables.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "agent": { "type": "string" },
+        "query": { "type": "string" },
+        "executionTimeMs": { "type": "number" },
+        "rowsReturned": { "type": "number" },
+        "tablesTouched": { "type": "array", "items": { "type": "string" } },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string", "enum": ["success", "cached"] }
+      },
+      "required": ["id", "agent", "query", "timestamp", "status"]
+    }
+  }
+}
